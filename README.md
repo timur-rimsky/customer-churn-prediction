@@ -63,6 +63,7 @@ Main scikit-learn tools used:
 
 * `train_test_split`
 * `LogisticRegression`
+* `StandardScaler`
 * `DecisionTreeClassifier`
 * `RandomForestClassifier`
 * `accuracy_score`
@@ -88,14 +89,15 @@ The project includes the following steps:
 8. Train/test split
 9. Baseline model
 10. Logistic Regression
-11. Decision Tree
-12. Limited-depth Decision Tree
-13. Random Forest
-14. Limited-depth Random Forest
-15. Model comparison
-16. Threshold tuning
-17. Feature importance analysis
-18. Final conclusions
+11. Scaled Logistic Regression
+12. Decision Tree
+13. Limited-depth Decision Tree
+14. Random Forest
+15. Limited-depth Random Forest
+16. Model comparison
+17. Threshold tuning
+18. Feature importance analysis
+19. Final conclusions
 
 ---
 
@@ -135,10 +137,11 @@ The following models were trained and compared:
 
 1. Baseline model
 2. Logistic Regression
-3. Decision Tree
-4. Limited-depth Decision Tree
-5. Random Forest
-6. Limited-depth Random Forest
+3. Scaled Logistic Regression
+4. Decision Tree
+5. Limited-depth Decision Tree
+6. Random Forest
+7. Limited-depth Random Forest
 
 The baseline model always predicts the majority class. It was used as a reference point to show why accuracy alone can be misleading in an imbalanced classification task.
 
@@ -155,15 +158,41 @@ The models were evaluated using the following metrics:
 
 Since the target classes are imbalanced and the main business goal is to identify customers who are likely to churn, recall was treated as one of the most important metrics.
 
-Logistic Regression achieved the best overall performance among the initial models. It showed the strongest balance between accuracy, recall, F1-score, and interpretability.
+Logistic Regression and Scaled Logistic Regression showed the strongest overall performance among the trained models.
+
+Scaled Logistic Regression achieved slightly higher accuracy and precision compared with the original Logistic Regression model. However, recall and F1-score slightly decreased. Since recall is especially important for churn prediction, the original Logistic Regression model remained the better candidate before threshold tuning.
+
+The limited-depth Random Forest achieved the highest precision, which means it made fewer false churn predictions. However, its recall was much lower, so it missed more customers who actually churned.
+
+The unrestricted Decision Tree showed the weakest overall performance. This suggests that a single decision tree may not generalize well on this dataset.
+
+Overall, the original Logistic Regression model was selected as the best candidate before threshold tuning because it provided the strongest churn detection performance while remaining easy to interpret.
+
+---
+
+## Scaled Logistic Regression
+
+Feature scaling was tested for Logistic Regression using `StandardScaler`.
+
+Only the numeric features were scaled:
+
+* `tenure`
+* `MonthlyCharges`
+* `TotalCharges`
+
+The scaler was fitted only on the training data and then applied to both the training and test sets. This was done to avoid data leakage.
+
+Scaled Logistic Regression achieved slightly higher accuracy and precision compared with the original Logistic Regression model. However, recall and F1-score slightly decreased.
+
+Since recall and F1-score are especially important for churn prediction, the original Logistic Regression model remained the better candidate before threshold tuning.
 
 ---
 
 ## Threshold Tuning
 
-After selecting Logistic Regression as the best initial model, threshold tuning was applied.
+After selecting Logistic Regression as the best candidate model, threshold tuning was applied.
 
-By default, classification models usually use a threshold of `0.5`. This means that if the predicted probability of churn is at least 0.5, the customer is classified as churned.
+By default, classification models usually use a threshold of `0.5`. This means that if the predicted probability of churn is at least `0.5`, the customer is classified as churned.
 
 However, in a churn prediction task, the business may want to identify more customers at risk of leaving, even if this leads to more false positive predictions.
 
@@ -245,7 +274,8 @@ The main findings of the project are:
 * fiber optic internet service is associated with higher churn probability;
 * electronic check payment method is associated with higher churn probability;
 * senior citizens have a higher churn rate compared to non-senior customers;
-* Logistic Regression performed best among the tested models;
+* Logistic Regression and Scaled Logistic Regression showed the strongest overall performance among the trained models;
+* scaling did not improve recall or F1-score compared with the original Logistic Regression model;
 * threshold tuning improved recall and F1-score;
 * Logistic Regression with threshold `0.4` was selected as the final model.
 
@@ -257,9 +287,11 @@ This project shows that customer churn can be predicted using machine learning m
 
 The baseline model demonstrated that accuracy alone can be misleading in an imbalanced classification problem. Although most customers did not churn, a model that always predicts the majority class cannot identify customers at risk.
 
-Several machine learning models were trained and compared. Logistic Regression showed the best initial performance among the tested models, especially in terms of recall and F1-score.
+Several classification models were trained and compared, including Logistic Regression, Scaled Logistic Regression, Decision Tree, limited-depth Decision Tree, Random Forest, and limited-depth Random Forest.
 
-Since recall is especially important in churn prediction, threshold tuning was applied. Lowering the classification threshold from `0.5` to `0.4` increased recall from `0.575` to `0.684` and improved F1-score from `0.609` to `0.626`.
+Feature scaling was also tested for Logistic Regression. It slightly improved accuracy and precision, but slightly decreased recall and F1-score. Since recall is especially important in churn prediction, the original Logistic Regression model remained the better candidate for threshold tuning.
+
+Since recall is especially important in churn prediction, threshold tuning was applied to improve the model's ability to identify churned customers. Lowering the classification threshold from `0.5` to `0.4` increased recall from `0.575` to `0.684` and improved F1-score from `0.609` to `0.626`.
 
 For this project, Logistic Regression with threshold `0.4` was selected as the final model because it provides a better balance between identifying customers at risk of churn and keeping precision at a reasonable level.
 
@@ -271,14 +303,14 @@ The project also showed that customer churn is associated with contract type, in
 
 Possible future improvements include:
 
-* applying feature scaling for Logistic Regression;
 * using cross-validation for more stable model evaluation;
 * tuning model hyperparameters;
 * testing additional models such as Gradient Boosting or XGBoost;
 * applying techniques for class imbalance, such as class weights or oversampling;
 * analyzing probability scores in more detail;
 * creating customer risk segments based on predicted churn probability;
-* estimating the business cost of false positives and false negatives.
+* estimating the business cost of false positives and false negatives;
+* building a full preprocessing and modeling pipeline.
 
 ---
 
