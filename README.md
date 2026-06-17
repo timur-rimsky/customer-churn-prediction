@@ -3,6 +3,7 @@
 ## Project Overview
 
 This project focuses on predicting customer churn using machine learning models.
+
 Customer churn prediction is an important business task because it helps identify customers who are likely to leave a service. Early detection of such customers allows a company to take retention actions in advance, such as offering support, discounts, personalized communication, or improved service conditions.
 
 The target variable in this project is `Churn`.
@@ -16,7 +17,11 @@ The main goal of this project is to compare several machine learning models and 
 
 ## Dataset
 
-The project uses the Telco Customer Churn dataset.
+This project uses the Telco Customer Churn dataset.
+
+The dataset is available on Kaggle:
+
+[Telco Customer Churn Dataset](https://www.kaggle.com/datasets/blastchar/telco-customer-churn)
 
 The dataset contains customer information such as:
 
@@ -31,6 +36,12 @@ The dataset contains customer information such as:
 * churn status.
 
 The original dataset contains 7043 rows and 21 columns.
+
+Due to licensing and redistribution considerations, the dataset file is not included in this repository. To reproduce the project, download the dataset from Kaggle and place the file in the project folder with the following name:
+
+```text
+Telco-Customer-Churn.csv
+```
 
 During data cleaning, the `TotalCharges` column was converted from object type to numeric format. After conversion, 11 missing values appeared. Since this was a very small part of the dataset, these rows were removed.
 
@@ -143,9 +154,7 @@ The models were evaluated using the following metrics:
 
 Since the target classes are imbalanced and the main business goal is to identify customers who are likely to churn, recall was treated as the most important metric.
 
-The best-performing model was Logistic Regression.
-
-Logistic Regression achieved the strongest overall balance between accuracy, recall, F1-score, and interpretability. It also had the highest recall among the trained models, which is especially important for this churn prediction task.
+Logistic Regression achieved the best overall performance among the trained models. It showed the strongest balance between accuracy, recall, F1-score, and interpretability.
 
 ---
 
@@ -234,15 +243,45 @@ Possible future improvements include:
 
 ---
 
+## How to Run This Project
+
+1. Clone this repository:
+
+```bash
+git clone https://github.com/timur-rimsky/customer-churn-prediction.git
+```
+
+2. Download the Telco Customer Churn dataset from Kaggle:
+
+[Telco Customer Churn Dataset](https://www.kaggle.com/datasets/blastchar/telco-customer-churn)
+
+3. Place the downloaded dataset file in the project folder with the following name:
+
+```text
+Telco-Customer-Churn.csv
+```
+
+4. Open the notebook:
+
+```text
+customer_churn_prediction.ipynb
+```
+
+5. Run all cells from top to bottom.
+
+---
+
 ## Repository Structure
 
 ```text
 customer-churn-prediction/
 │
 ├── customer_churn_prediction.ipynb
-├── Telco-Customer-Churn.csv
-└── README.md
+├── README.md
+└── .gitignore
 ```
+
+The dataset file `Telco-Customer-Churn.csv` is not included in this repository. It should be downloaded separately from Kaggle and placed in the project folder before running the notebook.
 
 ---
 
