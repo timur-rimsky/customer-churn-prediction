@@ -11,7 +11,7 @@ The target variable in this project is `Churn`.
 * `0` — customer did not churn
 * `1` — customer churned
 
-The main goal of this project is to compare several machine learning models and select the best one for identifying customers at risk of churn.
+The main goal of this project is to compare several machine learning models and select the best approach for identifying customers at risk of churn.
 
 ---
 
@@ -93,8 +93,9 @@ The project includes the following steps:
 13. Random Forest
 14. Limited-depth Random Forest
 15. Model comparison
-16. Feature importance analysis
-17. Final conclusions
+16. Threshold tuning
+17. Feature importance analysis
+18. Final conclusions
 
 ---
 
@@ -143,7 +144,7 @@ The baseline model always predicts the majority class. It was used as a referenc
 
 ---
 
-## Model Results
+## Model Comparison
 
 The models were evaluated using the following metrics:
 
@@ -152,24 +153,57 @@ The models were evaluated using the following metrics:
 * recall
 * F1-score
 
-Since the target classes are imbalanced and the main business goal is to identify customers who are likely to churn, recall was treated as the most important metric.
+Since the target classes are imbalanced and the main business goal is to identify customers who are likely to churn, recall was treated as one of the most important metrics.
 
-Logistic Regression achieved the best overall performance among the trained models. It showed the strongest balance between accuracy, recall, F1-score, and interpretability.
+Logistic Regression achieved the best overall performance among the initial models. It showed the strongest balance between accuracy, recall, F1-score, and interpretability.
+
+---
+
+## Threshold Tuning
+
+After selecting Logistic Regression as the best initial model, threshold tuning was applied.
+
+By default, classification models usually use a threshold of `0.5`. This means that if the predicted probability of churn is at least 0.5, the customer is classified as churned.
+
+However, in a churn prediction task, the business may want to identify more customers at risk of leaving, even if this leads to more false positive predictions.
+
+Several thresholds were tested:
+
+* `0.3`
+* `0.4`
+* `0.5`
+* `0.6`
+* `0.7`
+
+Lowering the threshold increased recall but decreased precision. This is an expected trade-off.
+
+The default threshold of `0.5` achieved:
+
+* recall: `0.575`
+* F1-score: `0.609`
+
+After lowering the threshold to `0.4`, the model achieved:
+
+* recall: `0.684`
+* F1-score: `0.626`
+
+Threshold `0.4` achieved the best F1-score and provided a stronger balance between recall and precision. For this reason, Logistic Regression with threshold `0.4` was selected as the final model.
 
 ---
 
 ## Best Model
 
-The selected best model is:
+The selected final model is:
 
-**Logistic Regression**
+**Logistic Regression with threshold 0.4**
 
-Logistic Regression was selected because:
+This model was selected because:
 
-* it achieved the highest recall among the trained models;
-* it had the best F1-score;
-* it performed better than Decision Tree and Random Forest models on the most important churn metric;
-* it is easier to interpret than tree-based ensemble models.
+* Logistic Regression had the best overall performance among the initial models;
+* threshold tuning improved recall from `0.575` to `0.684`;
+* F1-score improved from `0.609` to `0.626`;
+* the model provides a good balance between churn detection and reasonable precision;
+* Logistic Regression remains easy to interpret compared to more complex models.
 
 In a churn prediction task, recall is especially important because the business wants to identify as many customers at risk of leaving as possible. A model with low recall may miss many customers who are actually likely to churn.
 
@@ -212,7 +246,8 @@ The main findings of the project are:
 * electronic check payment method is associated with higher churn probability;
 * senior citizens have a higher churn rate compared to non-senior customers;
 * Logistic Regression performed best among the tested models;
-* recall is more important than accuracy for this churn prediction task.
+* threshold tuning improved recall and F1-score;
+* Logistic Regression with threshold `0.4` was selected as the final model.
 
 ---
 
@@ -222,9 +257,13 @@ This project shows that customer churn can be predicted using machine learning m
 
 The baseline model demonstrated that accuracy alone can be misleading in an imbalanced classification problem. Although most customers did not churn, a model that always predicts the majority class cannot identify customers at risk.
 
-Several machine learning models were trained and compared. Logistic Regression showed the best overall performance for this task, especially in terms of recall and F1-score. It was selected as the final model because it provides a strong balance between predictive performance and interpretability.
+Several machine learning models were trained and compared. Logistic Regression showed the best initial performance among the tested models, especially in terms of recall and F1-score.
 
-The project also showed that customer churn is strongly associated with contract type, internet service type, payment method, and additional services. These insights can help a business better understand customer behavior and design more effective retention strategies.
+Since recall is especially important in churn prediction, threshold tuning was applied. Lowering the classification threshold from `0.5` to `0.4` increased recall from `0.575` to `0.684` and improved F1-score from `0.609` to `0.626`.
+
+For this project, Logistic Regression with threshold `0.4` was selected as the final model because it provides a better balance between identifying customers at risk of churn and keeping precision at a reasonable level.
+
+The project also showed that customer churn is associated with contract type, internet service type, payment method, and additional services. These insights can help a business better understand customer behavior and design more effective retention strategies.
 
 ---
 
@@ -232,14 +271,14 @@ The project also showed that customer churn is strongly associated with contract
 
 Possible future improvements include:
 
-* tuning model hyperparameters;
-* adjusting the classification threshold to improve recall;
-* applying feature scaling;
-* testing additional models such as Gradient Boosting or XGBoost;
+* applying feature scaling for Logistic Regression;
 * using cross-validation for more stable model evaluation;
+* tuning model hyperparameters;
+* testing additional models such as Gradient Boosting or XGBoost;
 * applying techniques for class imbalance, such as class weights or oversampling;
-* analyzing probability scores instead of only class predictions;
-* creating customer risk segments based on predicted churn probability.
+* analyzing probability scores in more detail;
+* creating customer risk segments based on predicted churn probability;
+* estimating the business cost of false positives and false negatives.
 
 ---
 
